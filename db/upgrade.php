@@ -568,6 +568,27 @@ function hvp_upgrade_2020112600() {
 }
 
 /**
+ * Index hvp_content_user_data. Every content load and state save looks a row up by
+ * (user_id, hvp_id, sub_content_id, data_id) and backup, delete and reset filter by
+ * hvp_id; with only the primary key each of those is a full table scan.
+ *
+ * Same index as hvp_upgrade_2026090101 on the 1.28 fork, which skips it when present,
+ * so a site upgraded from this build to that one does not rebuild it.
+ */
+function hvp_upgrade_2023061201() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    $table = new xmldb_table('hvp_content_user_data');
+    $index = new xmldb_index('userdata', XMLDB_INDEX_NOTUNIQUE,
+        ['hvp_id', 'user_id', 'sub_content_id', 'data_id']);
+
+    if (!$dbman->index_exists($table, $index)) {
+        $dbman->add_index($table, $index);
+    }
+}
+
+/**
  * Hvp module upgrade function.
  *
  * @param string $oldversion The version we are upgrading from
@@ -593,6 +614,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2020082800,
         2020091500,
         2020112600,
+        2023061201,
     ];
 
     foreach ($upgrades as $version) {

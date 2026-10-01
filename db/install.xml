@@ -75,8 +75,11 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
+      <INDEXES>
+        <INDEX NAME="userdata" UNIQUE="false" FIELDS="hvp_id, user_id, sub_content_id, data_id" COMMENT="hvp_id leads so per-content backup, delete and reset paths use it as well as the per-user state lookups"/>
+      </INDEXES>
     </TABLE>
-    <TABLE NAME="hvp_libraries" COMMENT="Stores information about libraries.">
+    <TABLE NAME="hvp_libraries"COMMENT="Stores information about libraries.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary Key: The id of the library"/>
         <FIELD NAME="machine_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The library machine name"/>
